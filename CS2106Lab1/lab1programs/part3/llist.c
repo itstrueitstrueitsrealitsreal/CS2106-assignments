@@ -12,6 +12,7 @@
 
 void init_llist(TLinkedList **head) {
     // Set head to NULL
+    *head = NULL;
 }
 
 // Create a new node
@@ -21,6 +22,15 @@ void init_llist(TLinkedList **head) {
 // RETURNS: A new node containing the file information is created.
 
 TLinkedList *create_node(char *filename, int filesize, int startblock) {
+    TLinkedList *newNode = (TLinkedList *) malloc(sizeof(TLinkedList));
+
+    strncpy(newNode->filename, filename, MAX_FNAME_LEN - 1);
+    newNode->filesize = filesize;
+    newNode->startblock = startblock;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+
+    return newNode;
 }
 
 // Insert node into the end of the linkedlist indicated by head
@@ -29,6 +39,20 @@ TLinkedList *create_node(char *filename, int filesize, int startblock) {
 // POST: node is inserted into the linked list.
 
 void insert_llist(TLinkedList **head, TLinkedList *node) {
+    if (*head == NULL) {
+        *head = node;
+    } else {
+        TLinkedList *trav = *head;
+
+        // traverse through the list
+        while (trav->next != NULL) {
+            trav = trav->next;
+        }
+
+        // update pointers for the last node and the second last node
+        trav->next = node;
+        node->prev = trav;
+    }
 }
 
 // Delete node from the linkedlist
@@ -37,7 +61,22 @@ void insert_llist(TLinkedList **head, TLinkedList *node) {
 // POST: node is deleted from the linked list
 
 void delete_llist(TLinkedList **head, TLinkedList *node) {
+    // If the node to be deleted is the head
+    if (*head == node) {
+        *head = node->next; // Update the head to the next node
+    }
 
+    // Update the next node's previous pointer
+    if (node->next != NULL) {
+        node->next->prev = node->prev;
+    }
+
+    // Update the previous node's next pointer
+    if (node->prev != NULL) {
+        node->prev->next = node->next;
+    }
+
+    free(node);
 }
 
 
@@ -46,7 +85,12 @@ void delete_llist(TLinkedList **head, TLinkedList *node) {
 //      fname = Name of file to look for
 // RETURNS: The node that contains fname, or NULL if not found.
 TLinkedList *find_llist(TLinkedList *head, char *fname) {
-
+    // traverse through linkedlist till node with matching filename is found
+    TLinkedList *curr = head;
+    while (curr != NULL && strcmp(curr->filename, fname)) {
+        curr = curr->next;
+    }
+    return curr;
 }
 
 // Traverse the entire linked list calling a function
@@ -55,5 +99,10 @@ TLinkedList *find_llist(TLinkedList *head, char *fname) {
 // POST: fn is called with every node of the linked list.
 
 void traverse(TLinkedList **head, void (*fn)(TLinkedList *)) {
+    TLinkedList *curr = *head;
+    while (curr != NULL) {
+        fn(curr);
+        curr = curr->next;
+    }
 }
 
