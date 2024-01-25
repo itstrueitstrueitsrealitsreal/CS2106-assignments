@@ -30,6 +30,9 @@ void writelog(char *msg) {
 //
 
 void init_hashtable(TLinkedList *hashtable[], int len) {
+    for (int i = 0; i < len; i++) {
+        hashtable[i] = NULL;
+    }
 }
 
 // Returns the head of the linked list that MAY contain  the file identified 
