@@ -43,6 +43,18 @@ int main () {
     // Now print out everything
     printf("\nFilenames after insertion: \n");
     traverse(&head, print_node);
+//
+//    // Test find_llist
+//    printf("\nSearching for a.exe...\n");
+//    char searchFilename[] = "a.exe";
+//    TLinkedList *foundNode = find_llist(head, searchFilename);
+//
+//    if (foundNode != NULL) {
+//        printf("Node with filename '%s' found.\n", searchFilename);
+//        print_node(foundNode);
+//    } else {
+//        printf("Node with filename '%s' not found.\n", searchFilename);
+//    }
 
     // Now delete everything
     TLinkedList *trav = head, *next;
