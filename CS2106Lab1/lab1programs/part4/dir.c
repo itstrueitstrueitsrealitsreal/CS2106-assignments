@@ -35,7 +35,7 @@ void init_hashtable(TLinkedList *hashtable[], int len) {
     }
 }
 
-// Returns the head of the linked list that MAY contain  the file identified 
+// Returns the head of the linked list that MAY contain the file identified
 // by "filename". You need this because the llist routines require a
 // head variable in order to access the linked list. This function has
 // been done for you. If the linked list does not contain "filename",
