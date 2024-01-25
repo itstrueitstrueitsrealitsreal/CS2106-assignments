@@ -98,7 +98,7 @@ void update_hashtable(char *filename, int (*hashfun)(char *, int),
 //
 
 TLinkedList *find_file(char *filename, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
-
+    return NULL;
 }
 
 // Add a new file
@@ -117,7 +117,8 @@ TLinkedList *find_file(char *filename, int (*hashfun)(char *, int), TLinkedList 
 //
 
 
-void add_file(char *filename, int filesize, int startblock,
+void add_file(char *filename, int filesize, int startblock, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
+
 }
 
 // Delete file. Remove the file's entry from the directory
