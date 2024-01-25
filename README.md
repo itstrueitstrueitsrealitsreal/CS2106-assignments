@@ -12,6 +12,6 @@ Next, enter <FILENAME>.sh into the command line to run the script.
 
 ```shell
 chmod +x <FILENAME>.sh
-<FILENAME>.sh
+./<FILENAME>.sh
 ```
 Lab answers are included in the `.docx` file in each lab's folder.
