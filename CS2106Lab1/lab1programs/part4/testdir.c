@@ -131,9 +131,21 @@ int main() {
 
     filedata = find_file(fnames[1].filename, hash, hashtable, TABLE_LEN);
 
+
+
     if(!filedata) 
         printf("OK! File no longer found!\n");
     else
         printf("ERROR: File still exists!\n");
 
+    printf("printing files before deletion:\n");
+    listdir(hashtable, TABLE_LEN);
+
+    for (int i = 0; i < NUM_FNAMES; i++) {
+        delete_file(fnames[i].filename, hash, hashtable, TABLE_LEN);
+    }
+
+    printf("printing files after deletion:\n");
+    printf("testt\n");
+    listdir(hashtable, TABLE_LEN);
 }

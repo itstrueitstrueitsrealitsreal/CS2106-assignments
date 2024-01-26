@@ -31,7 +31,7 @@ void writelog(char *msg) {
 
 void init_hashtable(TLinkedList *hashtable[], int len) {
     for (int i = 0; i < len; i++) {
-        hashtable[i] = NULL;
+        init_llist(&hashtable[i]);
     }
 }
 
