@@ -152,6 +152,5 @@ int main() {
     delete_file(NEW_FILE, hash, hashtable, TABLE_LEN);
 
     printf("printing files after deletion:\n");
-    printf("testt\n");
     listdir(hashtable, TABLE_LEN);
 }
