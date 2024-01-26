@@ -133,7 +133,7 @@ void add_file(char *filename, int filesize, int startblock, int (*hashfun)(char 
     // check if file exists, return error if it does
     TLinkedList *head = find_file(filename, hashfun, hashtable, len);
     if (head) {
-        printf("ERROR: file already exists\n");
+        writelog("ERROR: file already exists\n");
         return;
     }
     head = get_filelist(filename, hashfun, hashtable, len);
@@ -153,7 +153,7 @@ void add_file(char *filename, int filesize, int startblock, int (*hashfun)(char 
 void delete_file(char *filename, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
     TLinkedList *head = get_filelist(filename, hashfun, hashtable, len);
     if (!head) {
-        printf("ERROR: file not found\n");
+        writelog("ERROR: file not found\n");
         return;
     }
     delete_llist(&head, find_file(filename, hashfun, hashtable, len));
@@ -176,7 +176,7 @@ void rename_file(char *old_filename, char *new_filename, int (*hashfun)(char *, 
     TLinkedList *head = find_file(old_filename, hashfun, hashtable, len);
     // return error if file not found
     if (!head) {
-        printf("ERROR: file not found\n");
+        writelog("ERROR: file not found\n");
         return;
     }
     // else, rename the file
