@@ -141,16 +141,19 @@ int main() {
     printf("printing files before deletion:\n");
     listdir(hashtable, TABLE_LEN);
 
-    printf("deleting file: %s\n", fnames[0].filename);
+    // Inserted code for deleting files
+    printf("** ADDED CODE STARTS HERE **\n");
+    printf("Deleting file: %s\n", fnames[0].filename);
     delete_file(fnames[0].filename, hash, hashtable, TABLE_LEN);
     for (int i = 2; i < NUM_FNAMES; i++) {
-        printf("deleting file: %s\n", fnames[i].filename);
+        printf("Deleting file: %s\n", fnames[i].filename);
         delete_file(fnames[i].filename, hash, hashtable, TABLE_LEN);
     }
 
-    printf("deleting file: %s\n", NEW_FILE);
+    printf("Deleting file: %s\n", NEW_FILE);
     delete_file(NEW_FILE, hash, hashtable, TABLE_LEN);
 
     printf("printing files after deletion:\n");
     listdir(hashtable, TABLE_LEN);
+    printf("Great Success!\n");
 }
