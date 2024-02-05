@@ -30,6 +30,9 @@ void writelog(char *msg) {
 //
 
 void init_hashtable(TLinkedList *hashtable[], int len) {
+    for(int i=0; i<len; i++) {
+        hashtable[i] = NULL;
+    }
 }
 
 // Returns the head of the linked list that MAY contain  the file identified 
@@ -75,7 +78,7 @@ TLinkedList *get_filelist(char *filename, int (*hashfun)(char *, int), TLinkedLi
 //
 
 
-void update_hashtable(char *filename, int (*hashfun)(char *, int), 
+void update_hashtable(char *filename, int (*hashfun)(char *, int),
     TLinkedList *hashtable[], int len, TLinkedList *newentry) {
 
     int ndx = hashfun(filename, len);
@@ -98,7 +101,9 @@ void update_hashtable(char *filename, int (*hashfun)(char *, int),
 //
 
 TLinkedList *find_file(char *filename, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
-
+    TLinkedList *filelist = get_filelist(filename, hashfun, hashtable, len);
+    TLinkedList *node = find_llist(filelist, filename);
+    return node;
 }
 
 // Add a new file
@@ -117,7 +122,16 @@ TLinkedList *find_file(char *filename, int (*hashfun)(char *, int), TLinkedList 
 //
 
 
-void add_file(char *filename, int filesize, int startblock,
+void add_file(char *filename, int filesize, int startblock, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
+    TLinkedList *filelist = get_filelist(filename, hashfun, hashtable, len);
+    TLinkedList *node = find_llist(filelist, filename);
+    if (node != NULL) {
+        writelog("File alr exists");
+    } else {
+        TLinkedList *new = create_node(filename, filesize, startblock);
+        insert_llist(&filelist, new);
+        update_hashtable(filename, hashfun, hashtable, len, filelist);
+    }
 }
 
 // Delete file. Remove the file's entry from the directory
@@ -130,7 +144,14 @@ void add_file(char *filename, int filesize, int startblock,
 //      HINT: The head might be changed.
 
 void delete_file(char *filename, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
-
+    TLinkedList *filelist = get_filelist(filename, hashfun, hashtable, len);
+    TLinkedList *node = find_llist(filelist, filename);
+    if (node == NULL) {
+        writelog("File not found");
+    } else {
+        delete_llist(&filelist, node);
+        update_hashtable(filename, hashfun, hashtable, len, filelist);
+    }
 }
 
 // Rename a file.
@@ -145,7 +166,16 @@ void delete_file(char *filename, int (*hashfun)(char *, int), TLinkedList *hasht
 
 void rename_file(char *old_filename, char *new_filename, int (*hashfun)(char *, int),
     TLinkedList *hashtable[], int len) {
-
+    TLinkedList *filelist = get_filelist(old_filename, hashfun, hashtable, len);
+    TLinkedList *node = find_llist(filelist, old_filename);
+    if (node == NULL) {
+        writelog("File not found");
+    } else {
+        int filesize = node->filesize;
+        int startblock = node->startblock;
+        delete_file(old_filename, hashfun, hashtable, len);
+        add_file(new_filename, filesize, startblock, hashfun, hashtable, len);
+    }
 }
 
 // Prints the details of a file. Implemented for you.
@@ -169,6 +199,11 @@ void listdir(TLinkedList *hashtable[], int len) {
     printf("\nFilename\t\t\tFile Size\t\tStart Block\n\n");
 
     // Implement the rest of this function below.
+    for (int i = 0; i < len; i++) {
+        traverse(&hashtable[i], print_node);
+    }
 
 }
-
+~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+~                                

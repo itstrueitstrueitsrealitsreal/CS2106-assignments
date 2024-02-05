@@ -129,6 +129,11 @@ int main() {
 
     delete_file(fnames[1].filename, hash, hashtable, TABLE_LEN);
 
+    // Now delete the file
+    printf("\nDeleting file %s\n", NEW_FILE);
+    delete_file(NEW_FILE, hash, hashtable, TABLE_LEN);
+
+
     filedata = find_file(fnames[1].filename, hash, hashtable, TABLE_LEN);
 
     if(!filedata) 
@@ -136,4 +141,16 @@ int main() {
     else
         printf("ERROR: File still exists!\n");
 
+    for (i = 0; i < 6; i++) {
+        filedata = find_file(fnames[i].filename, hash, hashtable, TABLE_LEN);
+        if(filedata) 
+            printf("OK! Found file!\n");
+        else
+            printf("ERROR: File not found!\n");
+
+        // Delete file
+        printf("\nDeleting file %s\n", fnames[1].filename);
+
+        delete_file(fnames[i].filename, hash, hashtable, TABLE_LEN);
+    }
 }

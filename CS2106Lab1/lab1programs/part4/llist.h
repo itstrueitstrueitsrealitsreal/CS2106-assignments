@@ -18,5 +18,3 @@ void traverse(TLinkedList **head, void (*fn)(TLinkedList *));
 
 
 
-
-
