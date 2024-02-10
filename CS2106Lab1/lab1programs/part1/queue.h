@@ -19,4 +19,4 @@ void clear_prod(double*);
 
 double reduce();
 
-double flex_reduce(void (*clear)(double *), double (*op)(double, double));
+double flex_reduce(void (*)(double *), double (*)(double, double));

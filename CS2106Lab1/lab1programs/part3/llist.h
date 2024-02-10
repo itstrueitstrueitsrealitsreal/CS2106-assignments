@@ -20,4 +20,4 @@ void delete_llist(TLinkedList **, TLinkedList *);
 
 TLinkedList *find_llist(TLinkedList *, char *);
 
-void traverse(TLinkedList **, void (*fn)(TLinkedList *));
+void traverse(TLinkedList **, void (*)(TLinkedList *));

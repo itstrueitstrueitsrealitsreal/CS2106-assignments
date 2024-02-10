@@ -30,9 +30,12 @@ void writelog(char *msg) {
 //
 
 void init_hashtable(TLinkedList *hashtable[], int len) {
+    for (int i = 0; i < len; i++) {
+        init_llist(&hashtable[i]);
+    }
 }
 
-// Returns the head of the linked list that MAY contain  the file identified 
+// Returns the head of the linked list that MAY contain the file identified
 // by "filename". You need this because the llist routines require a
 // head variable in order to access the linked list. This function has
 // been done for you. If the linked list does not contain "filename",
@@ -98,7 +101,16 @@ void update_hashtable(char *filename, int (*hashfun)(char *, int),
 //
 
 TLinkedList *find_file(char *filename, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
+    TLinkedList *res = NULL;
 
+    // get the list for the given filename
+    TLinkedList *head = get_filelist(filename, hashfun, hashtable, len);
+
+    // search the file list for the filename using llist functions
+
+    res = find_llist(head, filename);
+
+    return res;
 }
 
 // Add a new file
@@ -117,7 +129,16 @@ TLinkedList *find_file(char *filename, int (*hashfun)(char *, int), TLinkedList 
 //
 
 
-void add_file(char *filename, int filesize, int startblock,
+void add_file(char *filename, int filesize, int startblock, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
+    // check if file exists, return error if it does
+    TLinkedList *head = find_file(filename, hashfun, hashtable, len);
+    if (head) {
+        writelog("ERROR: file already exists\n");
+        return;
+    }
+    head = get_filelist(filename, hashfun, hashtable, len);
+    insert_llist(&head, create_node(filename, filesize, startblock));
+    update_hashtable(filename, hashfun, hashtable, len, head);
 }
 
 // Delete file. Remove the file's entry from the directory
@@ -130,7 +151,13 @@ void add_file(char *filename, int filesize, int startblock,
 //      HINT: The head might be changed.
 
 void delete_file(char *filename, int (*hashfun)(char *, int), TLinkedList *hashtable[], int len) {
-
+    TLinkedList *head = get_filelist(filename, hashfun, hashtable, len);
+    if (!head) {
+        writelog("ERROR: file not found\n");
+        return;
+    }
+    delete_llist(&head, find_file(filename, hashfun, hashtable, len));
+    update_hashtable(filename, hashfun, hashtable, len, head);
 }
 
 // Rename a file.
@@ -145,7 +172,20 @@ void delete_file(char *filename, int (*hashfun)(char *, int), TLinkedList *hasht
 
 void rename_file(char *old_filename, char *new_filename, int (*hashfun)(char *, int),
     TLinkedList *hashtable[], int len) {
+    // find the file
+    TLinkedList *head = find_file(old_filename, hashfun, hashtable, len);
+    // return error if file not found
+    if (!head) {
+        writelog("ERROR: file not found\n");
+        return;
+    }
+    // else, rename the file
+    int filesize = head->filesize;
+    int startblock = head->startblock;
 
+    delete_file(old_filename, hashfun, hashtable, len);
+
+    add_file(new_filename, filesize, startblock, hashfun, hashtable, len);
 }
 
 // Prints the details of a file. Implemented for you.
@@ -169,6 +209,9 @@ void listdir(TLinkedList *hashtable[], int len) {
     printf("\nFilename\t\t\tFile Size\t\tStart Block\n\n");
 
     // Implement the rest of this function below.
-
+    for (int i = 0; i < len; i++) {
+        traverse(&hashtable[i], print_node);
+    }
 }
+
 

@@ -75,7 +75,6 @@ void delete_llist(TLinkedList **head, TLinkedList *node) {
     if (node->prev != NULL) {
         node->prev->next = node->next;
     }
-
     free(node);
 }
 
