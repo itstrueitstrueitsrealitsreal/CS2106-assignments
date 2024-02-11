@@ -1,7 +1,8 @@
-Test date and time: Monday, 12 February 2024, 00:38:19
+Test date and time: Monday, 12 February 2024, 01:07:30
 
-Directory A0183741Y score 0 /        3
-Directory A0281754H score 0 /        3
+Directory A0183741Y score 3 /        3
+Directory A0281754H score 2 /        3
+Directory A0285757B has a compile error.
 Directory A0285757B score 0 /        3
 
 Processed        3 files.

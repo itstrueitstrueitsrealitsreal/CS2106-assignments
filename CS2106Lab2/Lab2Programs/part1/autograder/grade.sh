@@ -22,22 +22,26 @@ echo -e "Test date and time: $(date +%A), $(date +%d) $(date +%B) $(date +%Y), $
 for student in ./subs/*; do
     # Compile C code
     # Print compile error message to output file
-    gcc "$student"/sum.c "$student"/utils.c -o "$student/$1" >> results.out
+    gcc "$student"/sum.c "$student"/utils.c -o "$student/$1"
+    if [[ $? -ne 0 ]]; then
+        echo -e "Directory ${student##*/} has a compile error." >> results.out
+    fi
     max_score=$(ls ref/*.in | wc -l)
     score=0
     # Generate output from C code using *.in files in ref
     for i in ./ref/*.in; do
-        ref_output="${i%.in}.out"
-        student_output="$("$student/${1}" < "$i")"
-        if diff -q "$student_output" "$ref_output" &>/dev/null; then
-            ((score++))
+        ref_output=$(< "${i%.in}.out")
+        student_output="$("$student/$1" < "$i")"
+        if [ "$ref_output" == "$student_output" ]; then
+           ((score++))
         fi
     done
     # Compare with reference output files and award 1 mark if they are identical
     # print score for student
     echo -e "Directory ${student##*/} score ${score} / ${max_score}" >> results.out
-
+    rm "$student/$1"
 done
 # print total files marked.
 echo -e "\nProcessed $(ls ./subs/ | wc -l) files." >> results.out
+rm ./fun
 fi
