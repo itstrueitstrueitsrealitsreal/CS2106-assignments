@@ -1,3 +1,2 @@
 #!/bin/bash
-
-echo "Hello $(whoami), today is $(date +%A), , and the time is $(time +%A)."
+echo "Hello $(whoami), today is $(date +%A), $(date +%d) $(date +%B) $(date +%Y), and the time is $(date +%T)."
