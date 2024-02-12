@@ -37,7 +37,7 @@ int main() {
         dup2(p[0], STDIN_FILENO);
         // close the reading end of the pipe
         close(p[0]);
-        // open results.out to write the standard output of the process into
+        // open results.out to write the standard output of the process to
         int fp_out = open("./results.out", O_CREAT | O_WRONLY);
         // redirect the standard output of the process to results.out
         dup2(fp_out, STDOUT_FILENO);
