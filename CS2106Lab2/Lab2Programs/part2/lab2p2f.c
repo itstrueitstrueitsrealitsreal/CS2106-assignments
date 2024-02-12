@@ -24,7 +24,6 @@ int main() {
     if (pipe(p) < 0) {
         perror("lab2p2f: ");
     }
-
     // Send message from slow to talk
     if (fork() != 0) {
         close(p[0]);
@@ -34,13 +33,16 @@ int main() {
         execvp(args[0], args);
     } else {
         close(p[1]);
+        dup2(p[0], STDIN_FILENO);
+        close(p[0]);
+
         int fp_out = open("./results.out", O_CREAT | O_WRONLY);
         dup2(fp_out, STDOUT_FILENO);
         close(fp_out);
-        close(p[0]);
-        execlp("./talk", "./talk", NULL);
-    }
 
+        execlp("./talk", "talk", (char *)0);
+    }
+    wait(NULL);
     return 0;
 }
 

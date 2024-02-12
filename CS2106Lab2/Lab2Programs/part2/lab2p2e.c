@@ -16,7 +16,7 @@ int main() {
 
     // We will send a message from father to child
     if(fork() != 0) {
-        close(p[0]); // The the end we are not using.
+        close(p[0]); // The end we are not using.
         write(p[1], str, strlen(str));
         close(p[1]);
         wait(NULL);
