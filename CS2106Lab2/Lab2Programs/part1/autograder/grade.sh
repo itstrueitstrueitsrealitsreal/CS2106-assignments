@@ -32,7 +32,7 @@ for student in ./subs/*; do
     for i in ./ref/*.in; do
       ref_output="${i%.in}.out"
       student_output="$("$student/$1" < "$i")"
-      if diff -q "$ref_output" <(echo "$student_output") > /dev/null; then
+      if diff -q "$ref_output" <(echo "$student_output"); then
          ((score++))
       fi
     done
