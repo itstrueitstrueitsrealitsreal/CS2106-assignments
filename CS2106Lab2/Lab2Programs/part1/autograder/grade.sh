@@ -30,11 +30,11 @@ for student in ./subs/*; do
     score=0
     # Generate output from C code using *.in files in ref
     for i in ./ref/*.in; do
-        ref_output=$(< "${i%.in}.out")
-        student_output="$("$student/$1" < "$i")"
-        if [ "$ref_output" == "$student_output" ]; then
-           ((score++))
-        fi
+      ref_output="${i%.in}.out"
+      student_output="$("$student/$1" < "$i")"
+      if diff -q "$ref_output" <(echo "$student_output") > /dev/null; then
+         ((score++))
+      fi
     done
     # Compare with reference output files and award 1 mark if they are identical
     # print score for student
