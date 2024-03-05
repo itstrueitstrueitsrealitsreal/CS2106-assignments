@@ -30,6 +30,7 @@ int main() {
         // execute slow
         char *args[] = {"./slow", "5", NULL};
         execvp(args[0], args);
+        wait(NULL);
     } else {
         // close the writing end of the pipe
         close(p[1]);
