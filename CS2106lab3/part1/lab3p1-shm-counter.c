@@ -14,6 +14,7 @@ int main()
 
     int i;
     int *shm;
+    sem_t *sems;
 
     pid_t pid;
 
@@ -40,7 +41,7 @@ int main()
         exit(EXIT_FAILURE);
     }
     // attach the shared memory region to this process
-    sem_t *sems = shmat(semid, NULL, 0);
+    sems = shmat(semid, NULL, 0);
     if (sems == (sem_t*) -1)
     {
         perror("shmat");
