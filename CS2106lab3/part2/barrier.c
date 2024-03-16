@@ -21,11 +21,9 @@ void init_barrier(int numproc) {
     mutex_shmid = shmget(IPC_PRIVATE, sizeof(sem_t), IPC_CREAT | 0600);
     mutex = (sem_t*) shmat(mutex_shmid, NULL, 0);
     sem_init(mutex, 1, 1);
-
 }
 
 void reach_barrier() {
-    // todo: protect count using a mutex
     sem_wait(mutex);
     (*count)++;
     sem_post(mutex);
