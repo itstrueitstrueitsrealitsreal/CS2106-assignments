@@ -12,11 +12,11 @@ void init_barrier(int numproc) {
     nproc = numproc;
     count_shmid = shmget(IPC_PRIVATE, sizeof(int), IPC_CREAT | 0600);
     count = (int*) shmat(count_shmid, NULL, 0);
-    count = 0;
+    *count = 0;
 
     bar_shmid = shmget(IPC_PRIVATE, sizeof(sem_t), IPC_CREAT | 0600);
     barrier = (sem_t*) shmat(bar_shmid, NULL, 0);
-    sem_init(barrier, 0, 0);
+    sem_init(barrier, 1, 0);
 
     mutex_shmid = shmget(IPC_PRIVATE, sizeof(sem_t), IPC_CREAT | 0600);
     mutex = (sem_t*) shmat(mutex_shmid, NULL, 0);
