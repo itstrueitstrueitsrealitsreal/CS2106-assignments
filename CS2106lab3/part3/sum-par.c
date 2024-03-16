@@ -38,7 +38,7 @@ int main() {
 
     shmid1 = shmget(IPC_PRIVATE, NUM_PROCESSES * sizeof(int), IPC_CREAT | 0600);
     all_sum = (long int *) shmat(shmid1, NULL, 0);
-    
+
 
 
     for(i=0; i<NUM_PROCESSES; i++) {
@@ -53,16 +53,27 @@ int main() {
 
     if(pid == 0) {
 
-	/*insert code */
-        
+        /*insert code */
+        init_barrier(NUM_PROCESSES + 1);
+        int memory = i * per_process;
+        for (j = memory; j < (i + 1) * per_process; j++) {
+            sum += vect[j];
+        }
+        all_sum[i] = sum;
+        reach_barrier();
+
     }
-    else 
+    else
     {
         start = clock();
-    
-   	/* insert code */
-    
-	end = clock();
+
+        /* insert code */
+        reach_barrier();
+        for (j = 0; j < NUM_PROCESSES; j++) {
+            sum += all_sum[j];
+        }
+
+        end = clock();
 
         time_taken = ((double) end - start) / CLOCKS_PER_SEC;
 
@@ -76,7 +87,8 @@ int main() {
 
         shmdt(all_sum);
         shmctl(shmid1, IPC_RMID, 0);
-     }
+        destroy_barrier(pid);
+    }
 }
 
 
