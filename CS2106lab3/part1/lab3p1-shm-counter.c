@@ -14,7 +14,6 @@ int main()
 
     int i;
     int *shm;
-    sem_t semaphores[NUM_CHILDREN];
 
     pid_t pid;
 
@@ -53,7 +52,7 @@ int main()
     // Initialize semaphores
     for (i = 0; i < NUM_CHILDREN; i++)
     {
-        if (sem_init(&semaphores[i], 1, 0) == -1)
+        if (sem_init(&sems[i], 1, 0) == -1)
         {
             perror("sem_init");
             exit(EXIT_FAILURE);
@@ -75,7 +74,7 @@ int main()
         // Wait for previous child processes to finish their turn
         if (i > 0)
         {
-            if (sem_wait(&semaphores[i - 1]) == -1)
+            if (sem_wait(&sems[i - 1]) == -1)
             {
                 perror("sem_wait");
                 exit(EXIT_FAILURE);
@@ -93,7 +92,7 @@ int main()
         }
 
         // Release semaphore for next child process
-        if (sem_post(&semaphores[i + 1]) == -1)
+        if (sem_post(&sems[i - 1]) == -1)
         {
             perror("sem_post");
             exit(EXIT_FAILURE);
@@ -127,7 +126,11 @@ int main()
     // Destroy the semaphores
     for (int i = 0; i < NUM_CHILDREN; i++)
     {
-        sem_destroy(&sems[i]);
+        if (sem_destroy(&sems[i]) == -1)
+        {
+            perror("sem_destroy");
+            exit(EXIT_FAILURE);
+        }
     }
 
     // Detach the shared memory segment for semaphores
