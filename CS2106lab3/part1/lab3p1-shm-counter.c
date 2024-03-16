@@ -93,7 +93,7 @@ int main()
         }
 
         // Release semaphore for next child process
-        if (sem_post(&sems[i - 1]) == -1)
+        if (sem_post(&sems[i]) == -1)
         {
             perror("sem_post");
             exit(EXIT_FAILURE);
