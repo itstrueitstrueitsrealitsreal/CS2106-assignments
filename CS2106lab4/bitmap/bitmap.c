@@ -36,8 +36,27 @@ void print_map(unsigned char *map, int len) {
 // len = Length of bitmap in characters
 // num_zeroes = Length of string of 0's required
 // Returns: Index to stretch of 0's of required length, -1 if no such stretch can be found
-
 long search_map(unsigned char *bitmap, int len, long num_zeroes) {
+    int byte_index = 0, bit_offset = 0, bit_position, count = 0, start = 0;
+    for (int i = 0; i < len * 8; i++) {
+        bit_position = (byte_index * 8 + bit_offset) % 8;
+        int test = bitmap[byte_index] & (1 << (7 - bit_position));
+        if (test) {
+            count = 0;
+            start = (byte_index * 8) + bit_offset + 1;
+        } else {
+            count++;
+        }
+        if (count == num_zeroes) {
+            return start;
+        }
+        if (bit_position == 7) {
+            byte_index++;
+            bit_offset = 0;
+        } else {
+            bit_offset++;
+        }
+    }
     return -1;
 } //main
 
@@ -50,25 +69,39 @@ long search_map(unsigned char *bitmap, int len, long num_zeroes) {
 // Returns: Nothing
 
 void set_map(unsigned char *map, long start, long length, int value) {
+    int byte_index = start / 8;
+    int bit_offset = start % 8;
+    int bit_position;
+    for (int i = 0; i < length; i++) {
+        bit_position = i + bit_offset;
+
+        if (value) {
+            map[byte_index] |= (1 << (7 - bit_position));
+        } else {
+            map[byte_index] &= ~(1 << (7 - bit_position));
+        }
+
+        if (bit_position == 7) {
+            byte_index++;
+            bit_offset = 0;
+        }
+
+    }
 }
 
-// IMPLEMENTED FOR YOU
 // Marks a stretch of bits as "1", representing allocated memory
 // map = Bitmap declared as array of unsigned char
 // start = Starting index to mark
 // length = Number of bits to mark as "1"
 void allocate_map(unsigned char *map, long start, long length) {
-
-    
-
+    set_map(map, start, length, 1);
 }
 
-// IMPLEMENTED FOR YOU
 // Marks a stretch of bits as "0", representing allocated memory
 // map = Bitmap declared as array of unsigned char
 // start = Starting index to mark
 // length = Number of bits to mark as "0"
 void free_map(unsigned char *map, long start, long length) {
-    
+    set_map(map, start, length, 0);
 }
 
