@@ -4,7 +4,7 @@
 
 #include "llist.h"
 
-//#define DEBUG       // Enable debug printing
+#define DEBUG       // Enable debug printing
 
 // Debug printer
 
@@ -126,7 +126,6 @@ void delete_node(TNode **llist, TNode *node) {
         }
 
     }
-
     free(node);
 }
 
@@ -176,7 +175,6 @@ void process_list(TNode *llist, void (*func)(TNode *)) {
         func(trav);
         trav = trav->next;
     }
-
 }
 
 
@@ -197,7 +195,7 @@ void purge_list(TNode **llist) {
 
 // Reset traverser
 // where=0 START: Resets traverser to start of list
-// where=1 END: Rsets
+// where=1 END: Resets
 void reset_traverser(TNode *llist, int where)
 {
     if(llist == NULL)

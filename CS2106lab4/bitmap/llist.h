@@ -12,7 +12,8 @@ void dbprintf(char *format, ...);
 // memory manager
 
 typedef struct td {
-    size_t len;
+    size_t len; // Length of memory block
+    void *ptr; // Pointer to allocated memory block
 } TData;
 
 

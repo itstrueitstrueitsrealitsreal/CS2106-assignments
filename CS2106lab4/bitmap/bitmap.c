@@ -73,7 +73,7 @@ void set_map(unsigned char *map, long start, long length, int value) {
     int bit_offset = start % 8;
     int bit_position;
     for (int i = 0; i < length; i++) {
-        bit_position = i + bit_offset;
+        bit_position = (byte_index * 8 + bit_offset) % 8;
 
         if (value) {
             map[byte_index] |= (1 << (7 - bit_position));
@@ -84,6 +84,8 @@ void set_map(unsigned char *map, long start, long length, int value) {
         if (bit_position == 7) {
             byte_index++;
             bit_offset = 0;
+        } else {
+            bit_offset++;
         }
 
     }
