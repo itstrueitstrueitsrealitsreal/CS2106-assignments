@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "mymalloc.h"
+#include "llist.h"
 
 char _heap[MEMSIZE] = {0};
 TNode *_memlist = NULL; // To maintain information about length
@@ -12,6 +13,10 @@ long get_index(void *ptr) {
         return -1;
     else
         return (long) ((char *) ptr - &_heap[0]);
+}
+
+void print_memlist() {
+
 }
 
 // Allocates size bytes of memory and returns a pointer
