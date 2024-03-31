@@ -13,8 +13,8 @@ void dbprintf(char *format, ...);
 // val field. It is only used for testlist.c
 
 typedef struct td {
-    int isAllocated;
-    int len;
+    int isAllocated; // Boolean to check if memory is allocated
+    int len; // Length of memory segment
 } TData;
 
 

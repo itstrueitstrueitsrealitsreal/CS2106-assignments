@@ -45,7 +45,6 @@ void *mymalloc(size_t size) {
     return NULL;
 }
 
-// TODO
 // Frees memory pointer to by ptr.
 void myfree(void *ptr) {
     TNode *curr = get_memlist();
