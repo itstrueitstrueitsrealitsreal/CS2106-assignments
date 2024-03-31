@@ -28,11 +28,9 @@ void *mymalloc(size_t size) {
         return NULL;
     }
     allocate_map((unsigned char *)_heap, idx, size);
-    TNode* node = malloc(sizeof(TNode));
     TData* data = malloc(sizeof(TData));
     data->len = size;
-    node->key = idx;
-    node->pdata = data;
+    TNode* node = make_node(idx, data);
     insert_node(&_memlist, node, 0);
     return _heap + idx;
 }
