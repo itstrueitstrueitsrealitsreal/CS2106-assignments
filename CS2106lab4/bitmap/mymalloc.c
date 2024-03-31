@@ -17,20 +17,19 @@ long get_index(void *ptr) {
 
 void print_memlist() {
     // Implement this to call print_map from bitmap.c
-    print_map(_heap, MEMSIZE / 8);
+    print_map((unsigned char *)_heap, MEMSIZE / 8);
 }
 
 // Allocates size bytes of memory and returns a pointer
 // to the first byte.
 void *mymalloc(size_t size) {
-    int idx = search_map(_heap, MEMSIZE / 8 , size);
+    int idx = search_map((unsigned char *) _heap, MEMSIZE / 8 , size);
     if (idx == -1) {
         return NULL;
     }
-    allocate_map(_heap, idx, size);
+    allocate_map((unsigned char *)_heap, idx, size);
     TNode* node = malloc(sizeof(TNode));
     TData* data = malloc(sizeof(TData));
-    data->ptr = _heap + idx;
     data->len = size;
     node->key = idx;
     node->pdata = data;
@@ -45,7 +44,7 @@ void myfree(void *ptr) {
     if (ptr == NULL || node == NULL || idx == -1) {
         return;
     }
-    free_map(_heap, idx, node->pdata->len);
+    free_map((unsigned char *)_heap, idx, node->pdata->len);
     free(node->pdata);
     delete_node(&_memlist, node);
 }
