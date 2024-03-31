@@ -31,7 +31,7 @@ void *mymalloc(size_t size) {
     TData* data = malloc(sizeof(TData));
     data->len = size;
     TNode* node = make_node(idx, data);
-    insert_node(&_memlist, node, 0);
+    insert_node(&_memlist, node, ASCENDING);
     return _heap + idx;
 }
 

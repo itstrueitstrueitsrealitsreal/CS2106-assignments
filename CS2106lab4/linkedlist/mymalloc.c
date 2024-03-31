@@ -14,6 +14,10 @@ long get_index(void *ptr) {
         return (long) ((char *) ptr - &_heap[0]);
 }
 
+void print_memlist() {
+
+}
+
 // Allocates size bytes of memory and returns a pointer
 // to the first byte.
 void *mymalloc(size_t size) {
