@@ -4,7 +4,7 @@
 
 #include "llist.h"
 
-//#define DEBUG       // Enable debug printing
+#define DEBUG       // Enable debug printing
 
 // Debug printer
 
@@ -155,14 +155,16 @@ void merge_node(TNode *llist, TNode *node, int dir) {
     if(dir == 0) {
         if(node->prev == NULL)
             return;
-
+        node->prev->pdata->len += node->pdata->len;
+        free(node->pdata);
         delete_node(&llist, node);
     }
     else 
         if(dir == 1) {
             if(node->next == NULL)
                 return;
-
+            node->pdata->len += node->next->pdata->len;
+            free(node->next->pdata);
             delete_node(&llist, node->next);
         }
 }
@@ -197,7 +199,7 @@ void purge_list(TNode **llist) {
 
 // Reset traverser
 // where=0 START: Resets traverser to start of list
-// where=1 END: Rsets
+// where=1 END: Resets traverser to end of list
 void reset_traverser(TNode *llist, int where)
 {
     if(llist == NULL)
