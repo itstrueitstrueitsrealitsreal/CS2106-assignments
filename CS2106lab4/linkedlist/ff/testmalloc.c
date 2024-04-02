@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "mymalloc.h"
+#include "llist.h"
 
 void testalloc(long size, char *ptrname, char **ptr) {
     printf("\nAllocating %ld bytes to %s\n", size, ptrname);

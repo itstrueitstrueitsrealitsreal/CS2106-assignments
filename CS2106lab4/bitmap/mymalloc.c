@@ -35,6 +35,7 @@ void *mymalloc(size_t size) {
     return _heap + idx;
 }
 
+
 // Frees memory pointer to by ptr.
 void myfree(void *ptr) {
     int idx = get_index(ptr);
@@ -45,4 +46,8 @@ void myfree(void *ptr) {
     free_map((unsigned char *)_heap, idx, node->pdata->len);
     free(node->pdata);
     delete_node(&_memlist, node);
+}
+
+void freelast() {
+    delete_node(&_memlist, _memlist);
 }
