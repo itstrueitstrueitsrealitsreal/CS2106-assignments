@@ -8,6 +8,7 @@ void merge_free(TNode *node);
 
 char _heap[MEMSIZE] = {0};
 TNode *_memlist = NULL; // To maintain information about length
+TNode *last = NULL;
 
 // Do not change this. Used by the test harness.
 // You may however use this function in your code if necessary.
@@ -25,29 +26,34 @@ void print_memlist() {
 // Allocates size bytes of memory and returns a pointer
 // to the first byte.
 void *mymalloc(size_t size) {
-    TNode *curr = get_memlist();
-    int worst_fit = -1;
-    TNode *max = NULL;
-    while (curr != NULL) {
-        if (curr->pdata->isAllocated == 0 && curr->pdata->len >= size && curr->pdata->len > worst_fit) {
-            worst_fit = curr->pdata->len;
-            max = curr;
+    TNode *llist = get_memlist();
+    TNode *curr = last ? last : llist;
+    // Traverse the list starting from the last allocated block
+    do {
+        if (curr->pdata->isAllocated == 0 && curr->pdata->len >= size) {
+            // Found a suitable memory block
+            // Split the node if necessary
+            if (curr->pdata->len > size) {
+                TData *data = malloc(sizeof(TData));
+                data->len = curr->pdata->len - size;
+                data->isAllocated = 0;
+                TNode *node = make_node(curr->key + size, data);
+                insert_node(&curr, node, ASCENDING);
+                curr->pdata->len = size;
+            }
+            // Mark the memory block as allocated
+            curr->pdata->isAllocated = 1;
+            // Update the last allocated block
+            last = curr;
+            return &_heap[curr->key];
         }
-        curr = curr->next;
-    }
-    if (max != NULL) {
-        // split the node
-        if (max->pdata->len > size) {
-            TData *data = malloc(sizeof(TData));
-            data->len = max->pdata->len - size;
-            data->isAllocated = 0;
-            TNode *node = make_node(max->key + size, data);
-            insert_node(&_memlist, node, ASCENDING);
-            max->pdata->len = size;
+        curr = curr->next; // Move to the next node
+        if (curr == NULL) { // If the end of the list is reached, wrap around to the beginning
+            reset_traverser(llist, FRONT);
+            curr = llist;
         }
-        max->pdata->isAllocated = 1;
-        return &_heap[max->key];
-    }
+    } while (curr->key != last->key); // Continue until we reach the last allocated block again
+
     return NULL;
 }
 
@@ -61,6 +67,7 @@ void myfree(void *ptr) {
     // traverse through list, merge adjacent free nodes
     process_list(_memlist, merge_free);
 }
+
 
 TNode* create_memlist() {
     TData *data = malloc(sizeof(TData));

@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "mymalloc.h"
 #include "llist.h"
+#include <limits.h>
+
 TNode* get_memlist();
 void print_node(TNode *node);
 void merge_free(TNode *node);
@@ -26,7 +28,7 @@ void print_memlist() {
 // to the first byte.
 void *mymalloc(size_t size) {
     TNode *curr = get_memlist();
-    int worst_fit = -1;
+    int worst_fit = INT_MIN;
     TNode *max = NULL;
     while (curr != NULL) {
         if (curr->pdata->isAllocated == 0 && curr->pdata->len >= size && curr->pdata->len > worst_fit) {

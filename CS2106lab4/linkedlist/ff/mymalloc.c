@@ -26,27 +26,21 @@ void print_memlist() {
 // to the first byte.
 void *mymalloc(size_t size) {
     TNode *curr = get_memlist();
-    int worst_fit = -1;
-    TNode *max = NULL;
     while (curr != NULL) {
-        if (curr->pdata->isAllocated == 0 && curr->pdata->len >= size && curr->pdata->len > worst_fit) {
-            worst_fit = curr->pdata->len;
-            max = curr;
+        if (curr->pdata->isAllocated == 0 && curr->pdata->len >= size) {
+            // split the node
+            if (curr->pdata->len > size) {
+                TData *data = malloc(sizeof(TData));
+                data->len = curr->pdata->len - size;
+                data->isAllocated = 0;
+                TNode *node = make_node(curr->key + size, data);
+                insert_node(&_memlist, node, ASCENDING);
+                curr->pdata->len = size;
+            }
+            curr->pdata->isAllocated = 1;
+            return &_heap[curr->key];
         }
         curr = curr->next;
-    }
-    if (max != NULL) {
-        // split the node
-        if (max->pdata->len > size) {
-            TData *data = malloc(sizeof(TData));
-            data->len = max->pdata->len - size;
-            data->isAllocated = 0;
-            TNode *node = make_node(max->key + size, data);
-            insert_node(&_memlist, node, ASCENDING);
-            max->pdata->len = size;
-        }
-        max->pdata->isAllocated = 1;
-        return &_heap[max->key];
     }
     return NULL;
 }

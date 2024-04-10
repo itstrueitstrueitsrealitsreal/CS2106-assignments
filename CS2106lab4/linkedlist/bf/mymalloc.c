@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "mymalloc.h"
 #include "llist.h"
+#include <limits.h>
+
 TNode* get_memlist();
 void print_node(TNode *node);
 void merge_free(TNode *node);
@@ -26,27 +28,27 @@ void print_memlist() {
 // to the first byte.
 void *mymalloc(size_t size) {
     TNode *curr = get_memlist();
-    int worst_fit = -1;
-    TNode *max = NULL;
+    int best_fit = INT_MAX;
+    TNode *min= NULL;
     while (curr != NULL) {
-        if (curr->pdata->isAllocated == 0 && curr->pdata->len >= size && curr->pdata->len > worst_fit) {
-            worst_fit = curr->pdata->len;
-            max = curr;
+        if (curr->pdata->isAllocated == 0 && curr->pdata->len >= size && curr->pdata->len < best_fit) {
+            best_fit = curr->pdata->len;
+            min = curr;
         }
         curr = curr->next;
     }
-    if (max != NULL) {
+    if (min != NULL) {
         // split the node
-        if (max->pdata->len > size) {
+        if (min->pdata->len > size) {
             TData *data = malloc(sizeof(TData));
-            data->len = max->pdata->len - size;
+            data->len = min->pdata->len - size;
             data->isAllocated = 0;
-            TNode *node = make_node(max->key + size, data);
+            TNode *node = make_node(min->key + size, data);
             insert_node(&_memlist, node, ASCENDING);
-            max->pdata->len = size;
+            min->pdata->len = size;
         }
-        max->pdata->isAllocated = 1;
-        return &_heap[max->key];
+        min->pdata->isAllocated = 1;
+        return &_heap[min->key];
     }
     return NULL;
 }
